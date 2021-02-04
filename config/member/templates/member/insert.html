@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<link rel="stylesheet" href="/static/spring.css">
+</head>
+<body>
+    <form action="." method="post">
+        {%csrf_token%}
+        <p>이름 : <input type="text" name="username" /></p>
+        <p>비밀번호 : <input type="password" name="pw" /></p>
+        <p>이메일 : <input type="text" name="email" /></p>
+        <p>핸드폰 : <input type="text" name="hp" /></p>
+        <p>등록일 : <input type="text" name="regdate" /></p>
+        <p><button type="submit">등록</button></p>
+    </form>
+</body>
+</html>

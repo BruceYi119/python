@@ -1,0 +1,26 @@
+1)파이썬
+c:\Python\Python38
+
+2)파이참, 환경설정
+
+--웹페이지에 사용되는 기술 = html5+css3+javascript
+html : 웹페이지구성
+css : 스타일적용
+javascript : 사용자반응처리
+
+--html구조 (*.html, *.htm)
+태그 : 요소를 만들때 사용하는 기호, 시작태그와 끝태그가 존재
+    <h1>내용</h1>
+단독으로 사용하는 태그
+    html5 <br>
+    xhtml <br/> <-- 개발자들이 선호
+--특수문자
+공백 &nbsp;
+< &lt;
+> &gt;
+& &amp;
+--목록태그
+ol : ordered list
+ul : unordered list
+목록요소
+li : ol 또는 ul의 자식요소로 사용

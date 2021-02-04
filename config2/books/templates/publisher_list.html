@@ -1,0 +1,14 @@
+{%extends 'base.html'%}
+{%block title%}12번가{%endblock%}
+{%block content%}
+<h1>publisher_list.html</h1>
+<hr>
+<ul>
+{% for p in object_list%}
+  <li><a href="{%url 'book:publisherdetail' p.id %}">{{p.name}}</a>-{{p.addr}}</li>
+{%endfor%}
+</ul>
+<hr>
+<a href="{%url 'book:index'%}">홈으로</a><p>
+<a href="{%url 'book:publisherinsert'%}">출판사등록</a>
+{%endblock%}

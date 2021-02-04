@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h1>publisher_detail.html</h1>
+<hr>
+<p>출판사명 : {{object.name}}</p>
+<p>위치 : {{object.addr}}</p>
+<p>홈페이지 : {{object.website}}</p>
+<hr>
+<a href="{%url 'book:publisherlist' %}">출판사 목록</a>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{%extends 'base_books.html'%}
+{%block content%}
+<h1>index.html</h1>
+<hr>
+<ul>
+  {%for m in mlist%}
+  <li><a href="/book/{{m}}">book/{{m}}</a></li>
+  {%endfor%}
+
+</ul>
+{%endblock%}

@@ -1,0 +1,14 @@
+{%extends 'base_books.html'%}
+{%block content%}
+<h1>publisher_detail.html</h1>
+<hr>
+<p>출판사명 : {{object.name}}</p>
+<p>위치 : {{object.addr}}</p>
+<p>홈페이지 : {{object.website}}</p>
+<p>전경사진 : <img src="{{object.photo.url}}">{{object.photo.url}}</p> <!--이미지주소출력-->
+<hr>
+- 출판사 <br>
+<a href="{%url 'book:publisherlist' %}">목록</a>
+<a href="{%url 'book:publisherupdate' pk=object.id %}">수정</a>
+<a href="{%url 'book:publisherdelete' pk=object.id %}">삭제</a>
+{%endblock%}

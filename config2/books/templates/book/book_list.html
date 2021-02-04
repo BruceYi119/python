@@ -1,0 +1,13 @@
+{%extends 'base_books.html'%}
+{%block content%}
+<h1>book/book_list.html</h1>
+<hr>
+<ul>
+{% for b in object_list%}
+  <li>{{b.title}} - {{b.publisher}}</li>
+{% endfor%}
+</ul>
+<hr>
+<a href="{%url 'book:index'%}">홈으로</a>
+</ul>
+{%endblock%}

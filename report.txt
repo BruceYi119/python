@@ -1,0 +1,24 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 1 files
+Detected 0 issues that require attention
+--------------------------------------------------------------------------------
+================================================================================
+Detailed log follows:
+
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'tensor5.py'
+ outputting to 'tensor5_u.py'
+--------------------------------------------------------------------------------
+
+18:2: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+19:2: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+20:14: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+22:14: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+24:5: INFO: Added keywords to args of function 'tf.reduce_mean'
+25:6: INFO: Renamed 'tf.train.GradientDescentOptimizer' to 'tf.compat.v1.train.GradientDescentOptimizer'
+26:5: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+27:13: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+--------------------------------------------------------------------------------
+

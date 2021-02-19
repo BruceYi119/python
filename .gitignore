@@ -2,7 +2,6 @@ venv/
 .idea/
 __pycache__/
 dist/
-data/
 img/
 tetris/
 build/

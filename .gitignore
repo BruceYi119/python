@@ -5,3 +5,9 @@ dist/
 img/
 tetris/
 build/
+data/baby/
+data/result2007.csv
+data/2007.csv
+data/movie_rating_user.csv
+data/food.json
+data/ratings.dat

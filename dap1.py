@@ -115,12 +115,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import font_manager,rc
-fontname=font_manager.FontProperties(fname='malgun.ttf').get_name()
-rc('font',family=fontname)
+# fontname=font_manager.FontProperties(fname='malgun.ttf').get_name()
+# rc('font',family=fontname)
 import seaborn as sns
 # 1)
 # 2)
-data=pd.read_csv('data\\report.csv')
+# data=pd.read_csv('data\\report.csv')
 # data.info()
 # print(data.head(10))
 # print(data.tail(10))
@@ -141,8 +141,8 @@ data=pd.read_csv('data\\report.csv')
 # plt.ylabel('맥주소비량')
 # plt.show()
 # 5)
-tips=sns.load_dataset('tips')
-print(tips.dtypes)
+# tips=sns.load_dataset('tips')
+# print(tips.dtypes)
 # 6)
 # print(tips['total_bill'].min())
 # print(tips['total_bill'].max())
@@ -162,19 +162,42 @@ print(tips.dtypes)
 # plt.title('식사비용현황')
 # plt.show()
 # 9)
-bank=pd.read_csv('data\\bank.csv',
-        parse_dates=['Closing Date','Updated Date'])
+# bank=pd.read_csv('data\\bank.csv',
+#         parse_dates=['Closing Date','Updated Date'])
 # bank.info()
 # print(bank.head())
 # 10)
-bank['yy']=bank['Closing Date'].dt.year
-print(bank.head())
-s1=bank.groupby('yy').size()
-print(s1)
-plt.plot(s1)
-plt.show()
+# bank['yy']=bank['Closing Date'].dt.year
+# print(bank.head())
+# s1=bank.groupby('yy').size()
+# print(s1)
+# plt.plot(s1)
+# plt.show()
 
+######################################################################################################
 
+import cx_Oracle
+import requests
+from bs4 import BeautifulSoup
 
-
-
+url = 'https://www.alexa.com/topsites/'
+recvd = requests.get(url)
+# print(recvd)
+dom = BeautifulSoup(recvd.text, 'lxml')
+trs = dom.find_all(class_ = 'tr site-listing')
+sql = '''insert into ranking(rno, rank, sitename, info1, info2, info3, info4) values(s_ranking.nextval,{},'{}','{}','{}','{}','{}')'''
+conn = cx_Oracle.connect('doogle/enffl@localhost:1521/xe')
+cur = conn.cursor()
+for tr in trs:
+        tds = tr.find_all(class_ = 'td')
+        rank = tds[0].text
+        sitename = tds[1].text.strip()
+        info1 = tds[2].text.strip()
+        info2 = tds[3].text.strip()
+        info3 = tds[4].text.strip()
+        info4 = tds[5].text.strip()
+#         print('{}/{}/{}/{}/{}/{}'.format(rank, sitename, info1, info2, info3, info4))
+        cur.execute(sql.format(rank, sitename, info1, info2, info3, info4))
+conn.commit()
+conn.close()
+# select count(*) from ranking;

@@ -1,75 +1,64 @@
 import os
+import requests
 import numpy as np
-import pandas as pd
-import tensorflow as tf
-# import matplotlib.pyplot as plt
-# from sklearn import linear_model
-tf.compat.v1.disable_eager_execution()
+from PIL import Image
+import urllib.request
+from bs4 import BeautifulSoup
+from konlpy.tag import Okt
+from gensim.models import word2vec
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud, STOPWORDS
 
-data = pd.read_csv(os.path.join('data', 'water.csv'))
+# def search():
+#     url = 'https://movie.naver.com/movie/point/af/list.nhn?&page={}'
+#     text = ''
+#     for i in range(1,101):
+#         r = requests.get(url.format(i))
+#         dom = BeautifulSoup(r.text, 'lxml')
+#         trs = dom.select('table.list_netizen > tbody > tr')
+#         for tr in trs:
+#             title = tr.select_one('td.title > a').text.replace(',','')
+#             score = tr.select_one('td.title em').text
+#             text += '{},{}\n'.format(title, score)
+#
+#     with open(os.path.join('data','movie.csv'), 'w', encoding='utf-8') as f:
+#         f.write(text[:-1])
 
-# 1-1
-x_train = np.array(data.loc[:, ['old', 'new']])
-x_test = np.array(data.loc[:, ['old', 'new']])
-y_train = np.array(data.loc[:, 'as_time']).reshape(-1,1)
-y_test = np.array(data.loc[:, 'as_time']).reshape(-1,1)
-x = tf.compat.v1.placeholder(tf.float32, [None, 2])
-y = tf.compat.v1.placeholder(tf.float32, [None, 1])
-w = tf.Variable(tf.compat.v1.random_normal([2, 1]))
-b = tf.Variable(tf.compat.v1.random_normal([1]))
-logits = tf.matmul(x, w) + b
-h = tf.sigmoid(logits)
-cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=y))
-train = tf.compat.v1.train.GradientDescentOptimizer(0.1).minimize(cost)
+# search()
 
-with tf.compat.v1.Session() as sess:
-    sess.run(tf.compat.v1.global_variables_initializer())
-    for i in range(5001):
-        sess.run(train, feed_dict={x:x_train,y:y_train})
-        if i % 1000 == 0:
-            print('cost =', sess.run(cost, feed_dict={x: x_train, y: y_train}))
-    print('w =', sess.run(w), 'b =', sess.run(b))
+def cloud():
+    o = Okt()
+    text = ''
+    with open(os.path.join('data', 'movie.csv'), encoding='utf-8') as f:
+        text = f.read()
 
-# 1-2
-data = np.loadtxt(os.path.join('data','water.csv'), delimiter=',', skiprows=1)
-xdata = data[:,1:3]
-ydata = data[:,-1:]
-x = tf.compat.v1.placeholder(tf.float32,[None,2])
-y = tf.compat.v1.placeholder(tf.float32,[None,1])
-w = tf.Variable(tf.compat.v1.random_normal([2,1]))
-b = tf.Variable(tf.compat.v1.random_normal([1]))
-h = tf.matmul(x, w) + b
-cost = tf.reduce_mean(tf.square(y - h))
-train = tf.compat.v1.train.GradientDescentOptimizer(0.00000000003).minimize(cost)
-with tf.compat.v1.Session() as sess:
-    sess.run(tf.compat.v1.global_variables_initializer())
-    for i in range(5001):
-        sess.run(train,feed_dict={x:xdata,y:ydata})
-        if i % 1000 == 0:
-            print(sess.run(cost,feed_dict={x:xdata,y:ydata}))
+    data = text.split('\n')
+    str = ''
+    for d in data:
+        s = d.split(',')
+        str += '{} '.format(s[0])
 
-    print('필요 일원 수 =', sess.run(h, feed_dict={x:[[80000, 270000]]}) / (8 * 20))
+    lines = text.split(' ')
+    worddic = {}
+    for line in lines:
+        mal = o.pos(line, norm=True, stem=True)
+        stopwords = ['있다','위해','하다','되다','안하다','최근','이번','기준']
+        for m in mal:
+            if len(m[0])>1 and m[1] == 'Noun' and m[0] not in stopwords:
+                if not(m[0] in worddic):
+                    worddic[m[0]] = 0
+                worddic[m[0]] = worddic[m[0]] + 1
 
-# 2
-data = np.loadtxt(os.path.join('data', 'iris1.csv'), delimiter=',', skiprows=1)
-np.random.shuffle(data)
-x_train, y_train = data[:105,:4],data[:105,4:]
-x_test, y_test = data[105:,:4],data[105:,4:]
-x = tf.compat.v1.placeholder(tf.float32,[None,4])
-y = tf.compat.v1.placeholder(tf.float32,[None,3])
-w = tf.Variable(tf.compat.v1.random_normal([4,3]))
-b = tf.Variable(tf.compat.v1.random_normal([3]))
-logits = tf.matmul(x,w) + b
-h = tf.nn.softmax(logits)
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=y))
-train = tf.compat.v1.train.GradientDescentOptimizer(0.5).minimize(cost)
-with tf.compat.v1.Session() as sess:
-    sess.run(tf.compat.v1.global_variables_initializer())
-    for i in range(3001):
-        sess.run(train,feed_dict={x:x_train,y:y_train})
-        if i % 1000 == 0:
-            print(sess.run(cost,feed_dict={x:x_train,y:y_train}))
-    pred = sess.run(h, feed_dict={x:x_test})
-    corr = tf.equal(tf.argmax(pred,1),tf.argmax(y,1))
-    acc = tf.reduce_mean(tf.cast(corr,tf.float32))
-    print('정확도 =', sess.run(acc, feed_dict={x:x_test,y:y_test}))
+    dic = dict(sorted(worddic.items(), key=lambda x:x[1], reverse=True)[:100])
+    img = Image.open(os.path.join('img','wine.png'))
+    mask = np.array(img)
+    for i in range(len(mask)):
+        for j in range(len(mask[i])):
+            if mask[i][j] == 0:
+                mask[i][j] = 255
+    wc = WordCloud(max_font_size=100, mask=mask, background_color='white', font_path='C:\\Windows\\Fonts\\batang.ttc', max_words=99).generate_from_frequencies(dic)
+    plt.imshow(wc)
+    plt.axis('off')
+    plt.show()
+
+cloud()
